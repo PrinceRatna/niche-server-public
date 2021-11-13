@@ -20,51 +20,83 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 
 
 
-
  async function run() {
      try {
       await client.connect();
       const database = client.db("Car_Explores");
       const servicesCollection = database.collection("Car_data");
 
-//       const popularDatabase = client.db("popular");
-//       const placesCollection = popularDatabase.collection("places");
+      const reviewDatabase = client.db("Car_Review");
+      const reviewCollection = reviewDatabase.collection("review");
+
+      const adminDatabase = client.db("Car_Shop_Admin");
+      const adminCollection = adminDatabase.collection("Admins");
 
       const ordersDatabase = client.db("Orders_Cars_House");
       const ordersCollection = ordersDatabase.collection("Oders");
          
 //       // console.log('All route')
 
-       //Get  Services  API
+       //Get  explores
 
        app.get('/explores',async (req,res)=>{
          const cursor=servicesCollection.find({});
          const services=await cursor.toArray();
          res.send(services);
 
-
        })
-//        //post a service
-//        app.post('/services',async (req,res)=>{
-//        const newHomeService=req.body;
-//        const result=await servicesCollection.insertOne(newHomeService);
-//        console.log('hitting home service')
-//        res.json(result);
-      
+       //post explores
+
+       app.post('/explores',async(req,res)=>{
+        const newServices=req.body;
+        // newOrders.createdAt=new Date();
+        // console.log(newOrders);
+        const result = await servicesCollection.insertOne(newServices)
+        // console.log("hitting the post ")
+        res.send(result)
+        res.json(result);
+
+      })
 
 
-//       })
 
 
-// //Get places API
+//        //post a review
+       app.post('/addReview',async (req,res)=>{
+       const newReview=req.body;
+       const result=await reviewCollection.insertOne(newReview);
+       console.log('hitting home service')
+       res.json(result);
 
-//        app.get('/places',async (req,res)=>{
-//         const placeCursor=placesCollection.find({});
-//         const places=await placeCursor.toArray();
-//         res.send(places);
+      })
+//        //post a add Admin
+       app.post('/addAdmin',async (req,res)=>{
+       const newAdmin=req.body;
+       const result=await adminCollection.insertOne(newAdmin);
+       console.log('hitting home service')
+       res.json(result);
+
+      })
 
 
-//       })
+// //Get  review data
+
+       app.get('/addReview',async (req,res)=>{
+        const reviewCursor=reviewCollection.find({});
+        const reviews=await reviewCursor.toArray();
+        res.send(reviews);
+
+
+      })
+// //Get  admin data
+
+       app.get('/addAdmin',async (req,res)=>{
+        const adminCursor=adminCollection.find({});
+        const admins=await adminCursor.toArray();
+        res.send(admins);
+
+
+      })
 
 
 
