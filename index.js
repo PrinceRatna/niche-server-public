@@ -32,10 +32,13 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
       const adminDatabase = client.db("Car_Shop_Admin");
       const adminCollection = adminDatabase.collection("Admins");
 
+      const usersCarDatabase = client.db("Car_Shop_Users");
+      const usersCollection = usersCarDatabase.collection("Users");
+
       const ordersDatabase = client.db("Orders_Cars_House");
       const ordersCollection = ordersDatabase.collection("Oders");
          
-//       // console.log('All route')
+   
 
        //Get  explores
 
@@ -68,16 +71,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
        console.log('hitting home service')
        res.json(result);
 
-      })
-//        //post a add Admin
-       app.post('/addAdmin',async (req,res)=>{
-       const newAdmin=req.body;
-       const result=await adminCollection.insertOne(newAdmin);
-       console.log('hitting home service')
-       res.json(result);
-
-      })
-
+       })      
 
 // //Get  review data
 
@@ -100,21 +94,6 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 
 
 
-//       //get order
-//       app.get('/addOrders',async (req,res)=>{
-//         console.log(req.query)
-//         let query={}
-//         const email=req.query.email;
-//         console.log(email)
-//         if(email){
-//             query={email:email}
-//         }
-//         const ordersCursor=ordersCollection.find(query);
-//         const orders=await ordersCursor.toArray();
-//         res.send(orders);
-
-
-//       })
 
       //id diye khuje ber kora
       app.get('/singleCarDetail/:id', async(req,res)=>{
@@ -168,34 +147,57 @@ app.get('/addOrders',async (req,res)=>{
 })
 
 
-//       //update
-
-//       app.get('/addOrders/:id', async(req,res)=>{
-//         const id=req.params.id;
-//         const query={_id:ObjectId(id)};
-//         const allOrder=await ordersCollection.findOne(query)
-//         res.send(allOrder);
-//       })
 
 
-//       app.put('/addOrders/:id', async(req,res)=>{
-//         const id=req.params.id;
-//         const updatedOrder=req.body;
-//         const filter={_id:ObjectId(id)};
-//         const options={upsert:true};
-//         const updateDoc={
-//           $set:{
-//             name:updatedOrder.name,
-//             phone:updatedOrder.phone,
-//             address:updatedOrder.address,
-//             title:updatedOrder.title
-//           }
-//         };
-//         const result=await ordersCollection.updateOne(filter,updateDoc,options)
-//         res.json(result);
+
+//post a user*******************
+
+       app.post('/users',async (req,res)=>{
+       const newUser=req.body;
+       const result=await usersCollection.insertOne(newUser);
+       console.log('hitting user')
+       res.json(result);
+
+      })
+
+
       
       
-//       })
+
+      app.get('/users/:email', async(req,res)=>{
+        // const id=req.params.id;
+        const email=req.params.email;
+        const query={email:email};
+        const user=await usersCollection.findOne(query)
+         let isAdmin=false;
+        if(user?.role==='admin'){
+          isAdmin=true;
+
+        }
+        res.json({admin:isAdmin})
+       
+      })
+
+
+
+
+ //admin add (put)
+      app.put('/users', async(req,res)=>{
+        // const id=req.body;
+        const user=req.body;
+        console.log('put',user)
+        const filter={email:user.email};
+        const options={upsert:true};
+        const updateDoc={
+          $set:{
+            role:'admin'
+          }
+        };
+        const result=await usersCollection.updateOne(filter,updateDoc,options)
+        res.json(result);
+      
+      
+      })
   
 
 
