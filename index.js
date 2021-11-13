@@ -109,7 +109,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
       app.post('/addOrders',async(req,res)=>{
         const newOrders=req.body;
         // newOrders.createdAt=new Date();
-        console.log(newOrders);
+        // console.log(newOrders);
         const result = await ordersCollection.insertOne(newOrders)
         // console.log("hitting the post ")
         res.send(result)
@@ -132,7 +132,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 //get order by email
 
 app.get('/addOrders',async (req,res)=>{
-  console.log(req.query)
+  // console.log(req.query)
   let query={}
   const email=req.query.email;
   console.log(email)
@@ -185,7 +185,7 @@ app.get('/addOrders',async (req,res)=>{
       app.put('/users', async(req,res)=>{
         // const id=req.body;
         const user=req.body;
-        console.log('put',user)
+        // console.log('put',user)
         const filter={email:user.email};
         const options={upsert:true};
         const updateDoc={
