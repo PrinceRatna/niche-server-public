@@ -146,6 +146,15 @@ app.get('/addOrders',async (req,res)=>{
 
 })
 
+app.get('/addOrders',async (req,res)=>{
+  // console.log(req.query)
+  const allOrdersCursor=ordersCollection.find({});
+  const orders=await allOrdersCursor.toArray();
+  res.send(orders);
+
+
+})
+
 
 
 
